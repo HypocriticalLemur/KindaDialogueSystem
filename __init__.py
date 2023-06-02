@@ -30,15 +30,18 @@ class ChoiceFrame(tk.Toplevel):
     def __init__(self, master):
         super().__init__()  # borderwidth=1,highlightbackground="black",highlightthickness=1)
         self.title(master.strvars['id'].get())
-        ft = master.ft
+        ft = master.master.master.ft
+        # ft.config(size=12)
         self.content = {}
-        mapGrid = {'label'    : [1, 1], 
+        mapGrid = {'label' : [1, 0], 
                 'id_lb'    : [0, 2],
                 'id'       : [1, 2],
                 'speech_lb': [0, 3],
                 'speech'   : [1, 3],
                 'to_lb'    : [0, 4],
-                'to'       : [1, 4]
+                'to'       : [1, 4],
+                'remove'   : [0, 0],
+                'ok'       : [1, 5]
                 }
         mapLabel ={'label': "phrase: "+master.master.id,
                 'id_lb': "name: ",
@@ -52,22 +55,20 @@ class ChoiceFrame(tk.Toplevel):
             self.content[q] = tk.Entry(self, width=EntryWidth, textvariable=master.strvars[q], font=ft, )
         self.content['speech'] = sc(
             self, wrap=tk.WORD, height=3, width=EntryWidth, font=ft)  # int(10*scale))
+        
         self.content['speech'].insert(tk.INSERT, master.str['speech'])
+        self.content['remove'] = tk.Button(self, font=ft)
+        self.content['ok'] = tk.Button(self, font=ft)
         for q in mapGrid:
             self.content[q].grid(column=mapGrid[q][0], row=mapGrid[q][1])
 
         # self.apply = tk.Button(self, font=ft)
         # self.apply.grid(column=0, row=5)
         # self.apply['text']='apply'
-        self.remove = tk.Button(self, font=ft)
-        self.remove.grid(column=0, row=5)
-        self.remove['text'] = '-'
-        self.remove['command'] = master.remove
-
-        self.ok = tk.Button(self, font=ft)
-        self.ok.grid(column=1, row=5)
-        self.ok['text'] = 'ok'
-        self.ok['command'] = master.check_and_close
+        self.content['remove']['text'] = '⨷'
+        self.content['remove']['command'] = master.remove
+        self.content['ok']['text'] = 'ok'
+        self.content['ok']['command'] = master.check_and_close
 
         self.protocol("WM_DELETE_WINDOW", master.close_frame)
 
