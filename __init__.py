@@ -184,27 +184,32 @@ class MyFrame(tk.Frame):
 
         # self.canvas = tk.Canvas(self)
         # self.canvas.pack()
-        self.content['label'] = tk.Label(
-            self, text="phrase " + self.id, font=ft)
-        self.content['label'].grid(column=1, row=0)
-        self.content['speech_lb'] = tk.Label(self, text="speech: ", font=ft)
-        self.content['speech_lb'].grid(column=0, row=1)
+        mapLabel = {'label':'phrase ' + self.id,
+                    'speech_lb':'speech',
+                    'orator_lb':'orator'}
+        mapGrid = {'label'     : [1, 0],
+                'speech_lb'    : [0, 1],
+                'speech'       : [1, 1],
+                'orator_lb'    : [0, 2],
+                'orator'       : [1, 2],
+                'destructor'   : [0, 0]
+                }
+        for q in mapLabel:
+            self.content[q] = tk.Label(self, text=mapLabel[q], font=ft)
+
         self.content['speech'] = sc(
             self, wrap=tk.WORD, height=3, font=ft, width=EntryWidth,)  # int(10*scale))
-        self.content['speech'].grid(column=1, row=1)
-        self.content['orator_lb'] = tk.Label(self, text="orator: ", font=ft)
-        self.content['orator_lb'].grid(column=0, row=2)
         self.content['orator'] = tk.Entry(
             self, font=ft, width=EntryWidth, textvariable=self.strvars['orator'])  # int(10*scale))
-        self.content['orator'].grid(column=1, row=2)
         self.content['destructor'] = tk.Button(self, font=ft, text='⨷')
         # self.content['destructor'].img=tk.PhotoImage(file='close.png',width=20,height=20)
         # self.content['destructor'].config(image=self.content['destructor'].img)
-        self.content['destructor'].grid(column=0, row=0)
         self.content['destructor']["command"] = self.remove
-
         self.content['addbutton'] = tk.Button(self, font=ft)
         self.content['addbutton']['text'] = '+'
+
+        for q in mapGrid:
+            self.content[q].grid(column=mapGrid[q][0], row=mapGrid[q][1])
 
         self.choices = []
         self.addchoice = None
