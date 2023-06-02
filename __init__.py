@@ -17,6 +17,15 @@ class States (Enum):
     Choice = 1
 
 
+def get_sc(sc):
+    try:
+        tmp = sc.get('1.0', tk.END)
+        if tmp[-1] == '\n':
+            tmp = tmp[0:-1]
+    except:
+        tmp=""
+    return tmp
+
 class ChoiceFrame(tk.Toplevel):
     def __init__(self, master):
         super().__init__()  # borderwidth=1,highlightbackground="black",highlightthickness=1)
@@ -134,7 +143,7 @@ class Choice:
             self.master.master.DrawFrames()
 
     def check_choice(self):
-        self.str['speech'] = self.frame.content['speech'].get("1.0", tk.END)
+        self.str['speech'] = get_sc(self.frame.content['speech'])
         tostr = self.strvars['to'].get()
         to = None
         for w1 in self.master.master.frames:
@@ -240,7 +249,7 @@ class MyFrame(tk.Frame):
             # if isinstance(v, tk.Entry):
             #     data[k]=v.get()
             if isinstance(v, sc):
-                data['ScrolledText'][k] = v.get('1.0', tk.END)
+                data['ScrolledText'][k] = get_sc(v)
         data['choices'] = {}
         for c in self.choices:
             data['choices'][c.strvars['id'].get()] = c.pack_data()
@@ -289,9 +298,6 @@ class MyFrame(tk.Frame):
                 self.master.canvas.delete(ar)
             self.master.DrawArrows()
             self.destroy()
-
-    def get_speech(self):
-        return self.speech.get('1.0', tk.END)
 
     def get_orator(self):
         return self.orator.get()
