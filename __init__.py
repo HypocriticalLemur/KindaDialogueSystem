@@ -25,7 +25,24 @@ def get_sc(sc):
     except:
         tmp=""
     return tmp
-
+def get_entry(e):
+    if isinstance(e, sc):
+        text=get_sc(e)
+    elif isinstance(e,tk.Entry) or isinstance(e,tk.StringVar):
+        text=e.get()
+    elif isinstance(e,str):
+        text=e
+    else:
+        print('Unexpected error! Cannot get text from enrty')
+        text=""
+    return text
+def set_entry(e,text):
+    if isinstance(e, sc):
+        e.insert(tk.INSERT, text)
+    elif isinstance(e,tk.Entry) or isinstance(e,tk.StringVar):
+        e.set(text)
+    elif isinstance(e,str):
+        e=text
 class ChoiceFrame(tk.Toplevel):
     def __init__(self, master):
         super().__init__()  # borderwidth=1,highlightbackground="black",highlightthickness=1)
@@ -56,7 +73,8 @@ class ChoiceFrame(tk.Toplevel):
         self.content['speech'] = sc(
             self, wrap=tk.WORD, height=3, width=EntryWidth, font=ft)  # int(10*scale))
         
-        self.content['speech'].insert(tk.INSERT, master.str['speech'])
+        set_entry(self.content['speech'],master.str['speech'])
+        # self.content['speech'].insert(tk.INSERT, master.str['speech'])
         self.content['remove'] = tk.Button(self, font=ft)
         self.content['ok'] = tk.Button(self, font=ft)
         for q in mapGrid:
@@ -95,11 +113,11 @@ class Choice:
 
     def unpack_data(self, data: dict):
         for k, v in data['ScrolledText'].items():
-            self.content[k].insert(tk.INSERT, v)
+            set_entry(self.content[k],v)
         for k, v in data['strvars'].items():
-            self.strvars[k].set(v)
+            set_entry(self.strvars[k],v)
         for k, v in data['str'].items():
-            self.str[k] = v
+            set_entry(self.str[k],v)
         self.close_frame()
 
     def pack_data(self):
@@ -111,13 +129,12 @@ class Choice:
 
         for k, v in self.strvars.items():
             if isinstance(v, tk.StringVar):
-                data['strvars'][k] = v.get()
+                data['strvars'][k] = get_entry(v)
             if isinstance(v, sc):
-                data['ScrolledText'][k] = v.get("1.0", tk.END)
-
+                data['ScrolledText'][k] = get_entry(v)
         for k, v in self.str.items():
             if isinstance(v, str):
-                data['str'][k] = v
+                data['str'][k] = get_entry(v)
         return data
 
     def open_frame(self):
